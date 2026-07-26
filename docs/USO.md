@@ -1,47 +1,33 @@
 # Guia de uso
 
-DataType CNPJ para aplicacoes Elavora API.
+O pacote aceita CNPJ em duas representacoes:
 
-## Instalacao
-
-```bash
-composer require elavora/api-datatype-cnpj
-```
-
-## Quando usar
-
-- Validar e normalizar valores antes de chegar na regra de negocio.
-- Evitar passar strings soltas entre services, DTOs e persistencia.
-- Reutilizar a mesma validacao em controllers, comandos e testes.
-
-## Exemplo rapido
+- 14 caracteres sem mascara, com 12 posicoes alfanumericas e 2 digitos verificadores.
+- Mascara exata `AA.AAA.AAA/AAAA-DV`.
 
 ```php
 use Elavora\Api\DataTypes\Brazil\Cnpj;
 
-$valor = new Cnpj('12345678000195');
-$normalizado = $valor->value();
+$cnpj = Cnpj::from('12.ABC.345/01DE-35');
+
+echo $cnpj->value(); // 12ABC34501DE35
 ```
 
-## Principais pontos de entrada
+Letras minusculas sao aceitas e normalizadas para maiusculas. Espacos, texto adicional, caracteres nao ASCII, mascaras parciais e valores que nao sejam `string` sao rejeitados.
 
-- `Elavora\Api\DataTypes\Brazil\Cnpj`
+Para verificar uma entrada sem criar uma instancia:
 
-## Dependencias de runtime
+```php
+if (Cnpj::isValid($entrada)) {
+    $cnpj = Cnpj::from($entrada);
+}
+```
 
-- `elavora/api-datatype-core` `^0.1`
+## Validacao do pacote
 
-## Validacao no projeto consumidor
-
-Depois de instalar o pacote, rode os testes da aplicacao consumidora. Para uma verificacao isolada do pacote, use container:
+Execute os comandos a partir da raiz do clone:
 
 ```bash
-docker run --rm -v "${PWD}:/workspace" -w "/workspace/api-datatype-cnpj" composer:2 composer validate --strict --no-check-publish
-docker run --rm -v "${PWD}:/workspace" -w "/workspace/api-datatype-cnpj" composer:2 sh -lc "find . \\( -path ./.git -o -path ./vendor \\) -prune -o -name '*.php' -print0 | xargs -0 -r -n1 php -l"
+docker run --rm -v "${PWD}:/workspace" -w /workspace composer:2 composer update --no-interaction --no-progress --prefer-dist
+docker run --rm -v "${PWD}:/workspace" -w /workspace composer:2 composer check
 ```
-
-## Observacoes
-
-- Mantenha regras de produto fora deste pacote.
-- Prefira configurar extensoes no bootstrap da aplicacao.
-- Instale apenas os modulos que a aplicacao realmente usa.

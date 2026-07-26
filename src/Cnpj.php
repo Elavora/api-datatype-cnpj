@@ -13,21 +13,21 @@ final readonly class Cnpj extends AbstractDataType
      */
     public static function isValid(mixed $value): bool
     {
-        $digits = self::digits($value);
-        if (strlen($digits) !== 14 || preg_match('/^(\d)\1{13}$/', $digits) === 1) {
+        $registration = self::canonical($value);
+        if ($registration === null || preg_match('/^([0-9])\1{13}\z/', $registration) === 1) {
             return false;
         }
 
-        return self::digit($digits, 12) === (int) $digits[12]
-            && self::digit($digits, 13) === (int) $digits[13];
+        return self::digit($registration, 12) === (int) $registration[12]
+            && self::digit($registration, 13) === (int) $registration[13];
     }
 
     protected static function normalize(mixed $value): string
     {
-        return self::digits($value);
+        return self::canonical($value) ?? '';
     }
 
-    private static function digit(string $digits, int $position): int
+    private static function digit(string $registration, int $position): int
     {
         $weights = $position === 12
             ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
@@ -35,7 +35,7 @@ final readonly class Cnpj extends AbstractDataType
 
         $sum = 0;
         foreach ($weights as $index => $weight) {
-            $sum += (int) $digits[$index] * $weight;
+            $sum += (ord($registration[$index]) - 48) * $weight;
         }
 
         $remainder = $sum % 11;
@@ -43,8 +43,25 @@ final readonly class Cnpj extends AbstractDataType
         return $remainder < 2 ? 0 : 11 - $remainder;
     }
 
-    private static function digits(mixed $value): string
+    private static function canonical(mixed $value): ?string
     {
-        return preg_replace('/\D/', '', (string) $value) ?? '';
+        if (!is_string($value)) {
+            return null;
+        }
+
+        if (preg_match('/^[0-9A-Za-z]{12}[0-9]{2}\z/', $value) === 1) {
+            return strtoupper($value);
+        }
+
+        if (
+            preg_match(
+                '/^[0-9A-Za-z]{2}\.[0-9A-Za-z]{3}\.[0-9A-Za-z]{3}\/[0-9A-Za-z]{4}-[0-9]{2}\z/',
+                $value
+            ) !== 1
+        ) {
+            return null;
+        }
+
+        return strtoupper(str_replace(['.', '/', '-'], '', $value));
     }
 }
