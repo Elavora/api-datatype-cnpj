@@ -27,18 +27,21 @@ $normalizado = $valor->value();
 
 | Item | Valor |
 |---|---|
-| Última versão publicada | `0.2.0` (tag legada `v0.2.0`) |
-| PHP | `>=8.1` |
-| `elavora/api-datatype-core` | `^0.1` |
+| Última versão antes do upgrade | `0.2.0` (tag legada `v0.2.0`) |
+| Versão do upgrade | `1.0.0` |
+| PHP | `>=8.3` |
+| `elavora/api-datatype-core` | `^2.0` |
 
 As versões seguintes saem do fluxo central de release: veja [Versões e release](AUTOMACAO.md#versões-e-release).
-Estas restrições não mudam na adoção do pipeline central. O suporte ao framework 2 e ao PHP 8.3 vem em outro PR.
+A versão `1.0.0` atualiza o pacote para o `elavora/api-datatype-core` `^2.0` (que traz o framework 2) e exige PHP 8.3
+ou superior. A API de `Cnpj` não muda.
 
 ### `composer.json`
 
 O `composer.json` do pacote deve ter:
 
-- `require.php` = `">=8.1"` e `require.elavora/api-datatype-core` = `"^0.1"` (sem mudança)
+- `require.php` = `">=8.3"` e `require.elavora/api-datatype-core` = `"^2.0"`
+- `extra.branch-alias.dev-main` = `"1.0-dev"`
 - `autoload.psr-4` = `"Elavora\\Api\\DataTypes\\Brazil\\": "src/"` (sem mudança)
 - `require-dev.phpunit/phpunit` = `"^10.5 || ^11.0 || ^12.0"` (sem mudança)
 - `scripts.test` = `"phpunit -c phpunit.xml"` (sem mudança)
@@ -67,7 +70,7 @@ tudo o que não é dígito é removido. Ele é válido quando sobram exatamente 
 
 ## Dependencias de runtime
 
-- `elavora/api-datatype-core` `^0.1`
+- `elavora/api-datatype-core` `^2.0`
 
 ## Validação do pacote
 

@@ -412,13 +412,14 @@ Conteúdo exato:
 ### `composer.json`
 
 O arquivo é formatado com **2 espaços** de indentação (regra do `.editorconfig` para `*.json`), sem espaços duplos
-depois de `:` e sem sequências `\uXXXX` (por exemplo, `">=8.1"`, e não `"\u003e=8.1"`). Depois do PR, ele tem:
+depois de `:` e sem sequências `\uXXXX` (por exemplo, `">=8.3"`, e não `"\u003e=8.3"`). Depois do PR, ele tem:
 
 ```json
 {
   "name": "elavora/<repo>",
   "require": {
-    "php": ">=8.1"
+    "php": ">=8.3",
+    "elavora/api-datatype-core": "^2.0"
   },
   "require-dev": {
     "elavora/code-standards": "^1.1",
@@ -446,7 +447,10 @@ depois de `:` e sem sequências `\uXXXX` (por exemplo, `">=8.1"`, e não `"\u003
 O exemplo mostra só as chaves que esta adoção cria ou muda. As demais (`description`, `type`, `license`, as outras
 dependências de `require`, `autoload`, `extra.branch-alias`) continuam como estão, na ordem atual.
 
-Este PR não muda as restrições de versão do pacote: `require.php` continua `">=8.1"` e `elavora/api-datatype-core` continua `"^0.1"`. O suporte ao framework 2 e ao PHP 8.3 fica para outro PR. O ambiente de desenvolvimento e o CI usam PHP 8.3 (a imagem), e a restrição `>=8.1` do pacote continua valendo para quem o instala.
+- Este PR também é o upgrade do pacote: `php` sobe de `>=8.1` para `>=8.3`, e `elavora/api-datatype-core` sobe de
+  `^0.1` para `^2.0`, que traz o `elavora/api-framework` `^2.0`. O ambiente de desenvolvimento e o CI já usam PHP 8.3
+  (a imagem). O `src/` só muda se o core 2.0 exigir: `Cnpj` herda de `AbstractDataType`, cuja API não muda. Em
+  `extra.branch-alias`, `dev-main` passa de `0.1-dev` para `1.0-dev`.
 
 - `elavora/code-standards` fica em `require-dev`, nunca em `require`. A restrição é `^1.` seguido do minor (1 ou
   maior) e, opcionalmente, do patch. O minor mínimo é 1 porque o subcomando `lint` só existe a partir da 1.1.0, e o CI
@@ -839,7 +843,10 @@ As regras completas estão no `Elavora/.github`: [versionamento](https://github.
   maior número existente. O workflow nunca apaga nem move tag.
 - Só o último PR de uma série de mudanças leva `release`.
 
-**Neste repositório:** a última tag é a legada `v0.2.0`, que conta como a estável `0.2.0`. O PR de adoção do pipeline não leva `release` e leva a label `refactor`, então o merge gera `0.2.1-beta.1`. O `release.yml` novo roda no merge desse mesmo PR, e os workflows antigos de tag e publicação já não existem nele, então sai uma release só.
+**Neste repositório:** a última tag é a legada `v0.2.0`, que conta como a estável `0.2.0`. Um único PR faz o upgrade
+para o `elavora/api-datatype-core` `^2.0` e adota o pipeline. Ele é o último PR da série e leva as labels `upgrade`
+(major) e `release` (estável), então o merge gera a estável `1.0.0`. O `release.yml` novo roda no merge desse mesmo PR,
+e os workflows antigos de tag e publicação já não existem nele, então sai uma release só.
 
 O Packagist é avisado pelo `release.yml` a cada release, com o secret `PACKAGIST_WEBHOOK_URL`. O pacote só fica
 disponível na versão nova depois dessa notificação.
