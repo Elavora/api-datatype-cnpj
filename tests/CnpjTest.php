@@ -54,8 +54,31 @@ final class CnpjTest extends TestCase
 
     public function testNormalizaSoOsDigitos(): void
     {
-        self::assertSame('12345678000195', (new Cnpj('12345678000195'))->value());
-        self::assertSame('12345678000195', (new Cnpj('12.345.678/0001-95'))->value());
+        self::assertSame('12345678000195', Cnpj::from('12345678000195')->value());
         self::assertSame('12345678000195', Cnpj::from('12.345.678/0001-95')->value());
+        self::assertSame('12345678000195', Cnpj::from(12345678000195)->value());
+    }
+
+    /**
+     * @return array<string, array{mixed}>
+     */
+    public static function entradaInvalidaProvider(): array
+    {
+        return [
+            'digito verificador errado' => ['12345678000196'],
+            'todos iguais' => ['11111111111111'],
+            '13 digitos' => ['1234567800019'],
+            'vazio' => [''],
+            'null' => [null],
+        ];
+    }
+
+    #[DataProvider('entradaInvalidaProvider')]
+    public function testFromComEntradaInvalidaLancaExcecao(mixed $value): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Valor invalido para Elavora\Api\DataTypes\Brazil\Cnpj.');
+
+        Cnpj::from($value);
     }
 }
