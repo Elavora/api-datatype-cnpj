@@ -11,8 +11,13 @@ DataType CNPJ para aplicações Elavora API: valida e normaliza um CNPJ (14 díg
 ```php
 use Elavora\Api\DataTypes\Brazil\Cnpj;
 
-Cnpj::isValid('12345678000195');
+Cnpj::isValid('12345678000195'); // true
+
+$cnpj = Cnpj::from('12.345.678/0001-95');
+$cnpj->value(); // '12345678000195'
 ```
+
+Entrada inválida em `Cnpj::from()` lança `InvalidArgumentException`.
 
 Especificação completa, exemplos e validação local: [docs/USO.md](docs/USO.md).
 
@@ -28,7 +33,8 @@ Requisitos:
 - `elavora/api-datatype-core` `^2.0` (que traz o `elavora/api-framework` `^2.0`).
 
 Versão `1.0`: atualiza o pacote para o `elavora/api-datatype-core` 2.0, que substitui o `^0.1`, e passa a exigir
-PHP 8.3 ou superior. A API de `Cnpj` não muda, e o código em `src/` continua o mesmo.
+PHP 8.3 ou superior. **Quebra:** o construtor deixa de ser público (no core 2 ele é `final protected`),
+então `new Cnpj(...)` não funciona mais; use `Cnpj::from(...)`. `isValid()` e `value()` não mudam.
 
 ## Desenvolvimento e testes
 
