@@ -12,7 +12,7 @@ final class CnpjTest extends TestCase
 {
     public function testValidatesCnpj(): void
     {
-        self::assertSame('11222333000181', new Cnpj('11.222.333/0001-81')->value());
+        self::assertSame('11222333000181', (new Cnpj('11.222.333/0001-81'))->value());
         self::assertFalse(Cnpj::isValid('11.111.111/1111-11'));
     }
 
@@ -54,9 +54,9 @@ final class CnpjTest extends TestCase
 
     public function testNormalizaSoOsDigitos(): void
     {
-        self::assertSame('12345678000195', new Cnpj('12345678000195')->value());
-        self::assertSame('12345678000195', new Cnpj('12.345.678/0001-95')->value());
-        self::assertSame('12345678000195', new Cnpj(12345678000195)->value());
+        self::assertSame('12345678000195', (new Cnpj('12345678000195'))->value());
+        self::assertSame('12345678000195', (new Cnpj('12.345.678/0001-95'))->value());
+        self::assertSame('12345678000195', (new Cnpj(12345678000195))->value());
     }
 
     /**
