@@ -19,7 +19,7 @@ composer require elavora/api-datatype-cnpj
 ```php
 use Elavora\Api\DataTypes\Brazil\Cnpj;
 
-$cnpj = Cnpj::from('12.345.678/0001-95');
+$cnpj = new Cnpj('12.345.678/0001-95');
 
 $cnpj->value();                  // '12345678000195'
 (string) $cnpj;                  // '12345678000195'
@@ -27,7 +27,7 @@ json_encode($cnpj);              // '"12345678000195"'
 Cnpj::isValid('12345678000195');  // true
 ```
 
-O construtor não é público: crie sempre por `Cnpj::from()`.
+O construtor não é público: crie sempre por `new Cnpj()`.
 
 ## Versão e compatibilidade
 
@@ -44,7 +44,7 @@ ou superior.
 
 **Quebra de compatibilidade:** no `elavora/api-datatype-core` 2 o construtor de `AbstractDataType` é
 `final protected`, então `new Cnpj('12345678000195')` deixa de funcionar fora da própria classe. Troque por
-`Cnpj::from('12345678000195')`. `Cnpj::isValid()` e `value()` continuam iguais.
+`new Cnpj('12345678000195')`. `Cnpj::isValid()` e `value()` continuam iguais.
 
 ### `composer.json`
 
@@ -62,7 +62,7 @@ O `composer.json` do pacote deve ter:
 
 ## Criação e entrada inválida
 
-`Elavora\Api\DataTypes\Brazil\Cnpj::from(mixed $value): static` valida o valor com `isValid()` e devolve um `Cnpj`
+`Elavora\Api\DataTypes\Brazil\new Cnpj(mixed $value): static` valida o valor com `isValid()` e devolve um `Cnpj`
 com o valor normalizado (só os 14 dígitos). Se o valor for inválido, lança `\InvalidArgumentException` com a mensagem
 `Valor invalido para Elavora\Api\DataTypes\Brazil\Cnpj.`
 
@@ -70,7 +70,7 @@ com o valor normalizado (só os 14 dígitos). Se o valor for inválido, lança `
 use Elavora\Api\DataTypes\Brazil\Cnpj;
 
 try {
-    Cnpj::from('12345678000196'); // dígito verificador errado
+    new Cnpj('12345678000196'); // dígito verificador errado
 } catch (\InvalidArgumentException $e) {
     echo $e->getMessage(); // Valor invalido para Elavora\Api\DataTypes\Brazil\Cnpj.
 }
@@ -100,7 +100,7 @@ tudo o que não é dígito é removido. Ele é válido quando sobram exatamente 
 
 ## Dependencias de runtime
 
-- `elavora/api-datatype-core` `^2.0`
+- `elavora/api-datatype-core` `^3.0`
 
 ## Validação do pacote
 
