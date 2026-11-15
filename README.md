@@ -13,11 +13,11 @@ use Elavora\Api\DataTypes\Brazil\Cnpj;
 
 Cnpj::isValid('12345678000195'); // true
 
-$cnpj = Cnpj::from('12.345.678/0001-95');
+$cnpj = new Cnpj('12.345.678/0001-95');
 $cnpj->value(); // '12345678000195'
 ```
 
-Entrada inválida em `Cnpj::from()` lança `InvalidArgumentException`.
+Entrada inválida em `new Cnpj()` lança `InvalidArgumentException`.
 
 Especificação completa, exemplos e validação local: [docs/USO.md](docs/USO.md).
 
@@ -30,11 +30,11 @@ composer require elavora/api-datatype-cnpj
 Requisitos:
 
 - PHP 8.3 ou superior.
-- `elavora/api-datatype-core` `^2.0` (que traz o `elavora/api-framework` `^2.0`).
+- `elavora/api-datatype-core` `^3.0` (que traz o `elavora/api-framework` `^3.0`).
 
 Versão `1.0`: atualiza o pacote para o `elavora/api-datatype-core` 2.0, que substitui o `^0.1`, e passa a exigir
 PHP 8.3 ou superior. **Quebra:** o construtor deixa de ser público (no core 2 ele é `final protected`),
-então `new Cnpj(...)` não funciona mais; use `Cnpj::from(...)`. `isValid()` e `value()` não mudam.
+então `new Cnpj(...)` não funciona mais; use `new Cnpj(...)`. `isValid()` e `value()` não mudam.
 
 ## Desenvolvimento e testes
 
