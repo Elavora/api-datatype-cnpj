@@ -98,6 +98,19 @@ tudo o que não é dígito é removido. Ele é válido quando sobram exatamente 
 
 - `Elavora\Api\DataTypes\Brazil\Cnpj`
 
+## Documentação do tipo (OPTIONS)
+
+`Cnpj` implementa `Elavora\Api\Framework\Contracts\DescribesType`. O `OPTIONS` público da API usa
+`Cnpj::documentedType()` para documentar o campo sem expor o nome da classe PHP. Declara:
+
+- `type`: `string`
+- `mask`: `00.000.000/0000-00`
+- `pattern`: `^(\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}|\d{14})$` (com máscara ou só os 14 dígitos)
+- `example`: `11.222.333/0001-81`
+- `description`: CNPJ com ou sem máscara; `value()` devolve apenas os 14 dígitos
+
+A validação continua sendo feita por `isValid()`; o `pattern` só descreve o formato.
+
 ## Dependencias de runtime
 
 - `elavora/api-datatype-core` `^4.0`

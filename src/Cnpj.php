@@ -5,9 +5,26 @@ declare(strict_types=1);
 namespace Elavora\Api\DataTypes\Brazil;
 
 use Elavora\Api\DataTypes\AbstractDataType;
+use Elavora\Api\Framework\Contracts\DescribesType;
 
-final readonly class Cnpj extends AbstractDataType
+final readonly class Cnpj extends AbstractDataType implements DescribesType
 {
+    /**
+     * Descreve o tipo para a documentacao publica (OPTIONS).
+     *
+     * @return array<string, mixed>
+     */
+    public static function documentedType(): array
+    {
+        return [
+            'type' => 'string',
+            'mask' => '00.000.000/0000-00',
+            'pattern' => '^(\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}|\d{14})$',
+            'example' => '11.222.333/0001-81',
+            'description' => 'CNPJ com ou sem mascara; value() devolve apenas os 14 digitos.',
+        ];
+    }
+
     /**
      * Verifica se o valor e um CNPJ valido.
      */
